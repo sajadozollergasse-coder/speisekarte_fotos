@@ -49,7 +49,21 @@
       <strong>Kategorien</strong>
     </div>
     <nav class="cat-list" aria-label="Kategorien">
-      
+      <a href="#vorspeisenappetizers" onclick="closeSidebar()">Vorspeisen/Appetizers</a>
+      <a href="#nigiri-sushi" onclick="closeSidebar()">Nigiri-Sushi</a>
+      <a href="#single-luxury-plates" onclick="closeSidebar()">Single & Luxury Plates</a>
+      <a href="#signature-rolls" onclick="closeSidebar()">Signature Rolls</a>
+      <a href="#sashimi" onclick="closeSidebar()">Sashimi</a>
+      <a href="#hot-rolls-sushi-burger" onclick="closeSidebar()">Hot Rolls & Sushi Burger</a>
+      <a href="#classic-rolls" onclick="closeSidebar()">Classic Rolls</a>
+      <a href="#signature-dishes" onclick="closeSidebar()">Signature Dishes</a>
+      <a href="#wok" onclick="closeSidebar()">Wok</a>
+      <a href="#spicy-korean" onclick="closeSidebar()">Spicy Korean</a>
+      <a href="#thai-rotcurrythai-redcurry" onclick="closeSidebar()">Thai Rotcurry/Thai Redcurry</a>
+      <a href="#ramenudon" onclick="closeSidebar()">Ramen/Udon</a>
+      <a href="#fried-ricenoodles" onclick="closeSidebar()">Fried Rice/Noodles</a>
+      <a href="#beilagen-saucenside-dishes-sauces" onclick="closeSidebar()">Beilagen & Saucen/Side Dishes & Sauces</a>
+      <a href="#dessert" onclick="closeSidebar()">Dessert</a>
     </nav>
   </aside>
 
@@ -66,7 +80,21 @@
   </header>
 
   <main>
-    
+    <section id="vorspeisenappetizers"><h2>Vorspeisen/Appetizers</h2><div class="grid" data-category="vorspeisenappetizers"></div></section>
+    <section id="nigiri-sushi"><h2>Nigiri-Sushi</h2><div class="grid" data-category="nigiri-sushi"></div></section>
+    <section id="single-luxury-plates"><h2>Single & Luxury Plates</h2><div class="grid" data-category="single-luxury-plates"></div></section>
+    <section id="signature-rolls"><h2>Signature Rolls</h2><div class="grid" data-category="signature-rolls"></div></section>
+    <section id="sashimi"><h2>Sashimi</h2><div class="grid" data-category="sashimi"></div></section>
+    <section id="hot-rolls-sushi-burger"><h2>Hot Rolls & Sushi Burger</h2><div class="grid" data-category="hot-rolls-sushi-burger"></div></section>
+    <section id="classic-rolls"><h2>Classic Rolls</h2><div class="grid" data-category="classic-rolls"></div></section>
+    <section id="signature-dishes"><h2>Signature Dishes</h2><div class="grid" data-category="signature-dishes"></div></section>
+    <section id="wok"><h2>Wok</h2><div class="grid" data-category="wok"></div></section>
+    <section id="spicy-korean"><h2>Spicy Korean</h2><div class="grid" data-category="spicy-korean"></div></section>
+    <section id="thai-rotcurrythai-redcurry"><h2>Thai Rotcurry/Thai Redcurry</h2><div class="grid" data-category="thai-rotcurrythai-redcurry"></div></section>
+    <section id="ramenudon"><h2>Ramen/Udon</h2><div class="grid" data-category="ramenudon"></div></section>
+    <section id="fried-ricenoodles"><h2>Fried Rice/Noodles</h2><div class="grid" data-category="fried-ricenoodles"></div></section>
+    <section id="beilagen-saucenside-dishes-sauces"><h2>Beilagen & Saucen/Side Dishes & Sauces</h2><div class="grid" data-category="beilagen-saucenside-dishes-sauces"></div></section>
+    <section id="dessert"><h2>Dessert</h2><div class="grid" data-category="dessert"></div></section>
   </main>
 
   <div class="footer">© <span id="year"></span> — Alle Rechte vorbehalten.</div>
@@ -77,24 +105,66 @@
   </div>
 
   <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
+    const CATEGORIES = [
+      "vorspeisenappetizers","nigiri-sushi","single-luxury-plates","signature-rolls","sashimi",
+      "hot-rolls-sushi-burger","classic-rolls","signature-dishes","wok","spicy-korean",
+      "thai-rotcurrythai-redcurry","ramenudon","fried-ricenoodles",
+      "beilagen-saucenside-dishes-sauces","dessert"
+    ];
 
-    function openLightbox(src){
-      const lb=document.getElementById("lightbox"), im=document.getElementById("lightboxImg");
-      im.src=src; lb.classList.add("open"); lb.setAttribute("aria-hidden","false");
+    async function loadManifest(cat) {
+      try {
+        const res = await fetch(`image/${cat}/manifest.json`);
+        if (!res.ok) return null;
+        const data = await res.json();
+        return Array.isArray(data.images) ? data.images : null;
+      } catch { return null; }
     }
-    document.getElementById("closeBtn").addEventListener("click", () => {
-      const lb=document.getElementById("lightbox");
-      lb.classList.remove("open"); lb.setAttribute("aria-hidden","true");
-    });
-    document.addEventListener("keydown", (e) => { if(e.key==="Escape") document.getElementById("closeBtn").click(); });
 
-    // Sidebar
+    async function init() {
+      document.getElementById("year").textContent = new Date().getFullYear();
+      for (const cat of CATEGORIES) {
+        const grid = document.querySelector(`.grid[data-category="${cat}"]`);
+        const images = await loadManifest(cat);
+        if (!images || !images.length) {
+          grid.innerHTML = '<div class="empty">Keine Bilder gefunden.</div>';
+          continue;
+        }
+        for (const file of images) {
+          const src = `image/${cat}/${file}`;
+          const fig = document.createElement("figure");
+          const img = document.createElement("img");
+          img.loading = "lazy"; img.decoding = "async"; img.src = src;
+          img.alt = file; img.addEventListener("click", () => openLightbox(src));
+          const cap = document.createElement("figcaption");
+          cap.textContent = file.replace(/\.[^.]+$/, '').replace(/[-_]/g,' ');
+          fig.appendChild(img); fig.appendChild(cap); grid.appendChild(fig);
+        }
+      }
+    }
+
+    function openLightbox(src) {
+      const lb = document.getElementById("lightbox");
+      const im = document.getElementById("lightboxImg");
+      im.src = src;
+      lb.classList.add("open");
+      lb.setAttribute("aria-hidden","false");
+    }
+
+    document.getElementById("closeBtn").addEventListener("click", () => {
+      const lb = document.getElementById("lightbox");
+      lb.classList.remove("open");
+      lb.setAttribute("aria-hidden","true");
+    });
+    document.addEventListener("keydown",(e)=>{ if(e.key==="Escape") document.getElementById("closeBtn").click(); });
+
     const sidebar=document.getElementById('sidebar'), backdrop=document.getElementById('sidebarBackdrop'), burger=document.getElementById('hamburger');
     function openSidebar(){ sidebar.classList.add('open'); backdrop.classList.add('open-backdrop'); burger.setAttribute('aria-expanded','true'); }
     function closeSidebar(){ sidebar.classList.remove('open'); backdrop.classList.remove('open-backdrop'); burger.setAttribute('aria-expanded','false'); }
     burger.addEventListener('click', ()=>{ sidebar.classList.contains('open') ? closeSidebar() : openSidebar(); });
     backdrop.addEventListener('click', closeSidebar);
+
+    init();
   </script>
 </body>
 </html>
