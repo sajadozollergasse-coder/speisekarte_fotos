@@ -52,21 +52,21 @@
       <strong>Kategorien</strong>
     </div>
     <nav class="cat-list" aria-label="Kategorien">
-      <a href="#vorspeisen-appetizers" onclick="closeSidebar()">Vorspeisen/Appetizers</a>
-      <a href="#nigiri-sushi" onclick="closeSidebar()">Nigiri-Sushi</a>
-      <a href="#single-luxury-plates" onclick="closeSidebar()">Single & Luxury Plates</a>
-      <a href="#signature-rolls" onclick="closeSidebar()">Signature Rolls</a>
-      <a href="#sashimi" onclick="closeSidebar()">Sashimi</a>
-      <a href="#hot-rolls-sushi-burger" onclick="closeSidebar()">Hot Rolls & Sushi Burger</a>
-      <a href="#classic-rolls" onclick="closeSidebar()">Classic Rolls</a>
-      <a href="#signature-dishes" onclick="closeSidebar()">Signature Dishes</a>
-      <a href="#wok" onclick="closeSidebar()">Wok</a>
-      <a href="#spicy-korean" onclick="closeSidebar()">Spicy Korean</a>
-      <a href="#thai-rotcurry-thai-redcurry" onclick="closeSidebar()">Thai Rotcurry/Thai Redcurry</a>
-      <a href="#ramen-udon" onclick="closeSidebar()">Ramen/Udon</a>
-      <a href="#fried-rice-noodles" onclick="closeSidebar()">Fried Rice/Noodles</a>
-      <a href="#beilagen-saucen-side-dishes-sauces" onclick="closeSidebar()">Beilagen & Saucen/Side Dishes & Sauces</a>
-      <a href="#dessert" onclick="closeSidebar()">Dessert</a>
+      <a href="#vorspeisen">Vorspeisen/Appetizers</a>
+      <a href="#nigiri-sushi">Nigiri-Sushi</a>
+      <a href="#single-luxury-plates">Single & Luxury Plates</a>
+      <a href="#signature-rolls">Signature Rolls</a>
+      <a href="#sashimi">Sashimi</a>
+      <a href="#hot-rolls-sushi-burger">Hot Rolls & Sushi Burger</a>
+      <a href="#classic-rolls">Classic Rolls</a>
+      <a href="#signature-dishes">Signature Dishes</a>
+      <a href="#wok">Wok</a>
+      <a href="#spicy-korean">Spicy Korean</a>
+      <a href="#thai-rotcurry">Thai Rotcurry/Thai Redcurry</a>
+      <a href="#ramen-udon">Ramen/Udon</a>
+      <a href="#fried-rice-noodles">Fried Rice/Noodles</a>
+      <a href="#beilagen-saucen-side-dishes-sauces">Beilagen & Saucen/Side Dishes & Sauces</a>
+      <a href="#dessert">Dessert</a>
     </nav>
   </aside>
 
@@ -83,7 +83,7 @@
   </header>
 
   <main>
-    <section id="vorspeisen-appetizers"><h2>Vorspeisen/Appetizers</h2><div class="grid" data-category="vorspeisen-appetizers"></div></section>
+    <section id="vorspeisen"><h2>Vorspeisen/Appetizers</h2><div class="grid" data-category="vorspeisen"></div></section>
     <section id="nigiri-sushi"><h2>Nigiri-Sushi</h2><div class="grid" data-category="nigiri-sushi"></div></section>
     <section id="single-luxury-plates"><h2>Single & Luxury Plates</h2><div class="grid" data-category="single-luxury-plates"></div></section>
     <section id="signature-rolls"><h2>Signature Rolls</h2><div class="grid" data-category="signature-rolls"></div></section>
@@ -93,7 +93,7 @@
     <section id="signature-dishes"><h2>Signature Dishes</h2><div class="grid" data-category="signature-dishes"></div></section>
     <section id="wok"><h2>Wok</h2><div class="grid" data-category="wok"></div></section>
     <section id="spicy-korean"><h2>Spicy Korean</h2><div class="grid" data-category="spicy-korean"></div></section>
-    <section id="thai-rotcurry-thai-redcurry"><h2>Thai Rotcurry/Thai Redcurry</h2><div class="grid" data-category="thai-rotcurry-thai-redcurry"></div></section>
+    <section id="thai-rotcurry"><h2>Thai Rotcurry/Thai Redcurry</h2><div class="grid" data-category="thai-rotcurry"></div></section>
     <section id="ramen-udon"><h2>Ramen/Udon</h2><div class="grid" data-category="ramen-udon"></div></section>
     <section id="fried-rice-noodles"><h2>Fried Rice/Noodles</h2><div class="grid" data-category="fried-rice-noodles"></div></section>
     <section id="beilagen-saucen-side-dishes-sauces"><h2>Beilagen & Saucen/Side Dishes & Sauces</h2><div class="grid" data-category="beilagen-saucen-side-dishes-sauces"></div></section>
@@ -108,34 +108,31 @@
   </div>
 
   <script>
+    // Categories with multiple possible folder aliases to match your repo
     const CATEGORIES = [
-      { name:"Vorspeisen/Appetizers", slug:"vorspeisen-appetizers" },
-      { name:"Nigiri-Sushi", slug:"nigiri-sushi" },
-      { name:"Single & Luxury Plates", slug:"single-luxury-plates" },
-      { name:"Signature Rolls", slug:"signature-rolls" },
-      { name:"Sashimi", slug:"sashimi" },
-      { name:"Hot Rolls & Sushi Burger", slug:"hot-rolls-sushi-burger" },
-      { name:"Classic Rolls", slug:"classic-rolls" },
-      { name:"Signature Dishes", slug:"signature-dishes" },
-      { name:"Wok", slug:"wok" },
-      { name:"Spicy Korean", slug:"spicy-korean" },
-      { name:"Thai Rotcurry/Thai Redcurry", slug:"thai-rotcurry-thai-redcurry" },
-      { name:"Ramen/Udon", slug:"ramen-udon" },
-      { name:"Fried Rice/Noodles", slug:"fried-rice-noodles" },
-      { name:"Beilagen & Saucen/Side Dishes & Sauces", slug:"beilagen-saucen-side-dishes-sauces" },
-      { name:"Dessert", slug:"dessert" }
+      { name:"Vorspeisen/Appetizers", id:"vorspeisen", aliases:["vorspeisen-appetizers","vorspeisen","appetizers"] },
+      { name:"Nigiri-Sushi", id:"nigiri-sushi", aliases:["nigiri-sushi"] },
+      { name:"Single & Luxury Plates", id:"single-luxury-plates", aliases:["single-luxury-plates","single","luxury-plates"] },
+      { name:"Signature Rolls", id:"signature-rolls", aliases:["signature-rolls"] },
+      { name:"Sashimi", id:"sashimi", aliases:["sashimi"] },
+      { name:"Hot Rolls & Sushi Burger", id:"hot-rolls-sushi-burger", aliases:["hot-rolls-sushi-burger","sushi-burger","hot-rolls"] },
+      { name:"Classic Rolls", id:"classic-rolls", aliases:["classic-rolls"] },
+      { name:"Signature Dishes", id:"signature-dishes", aliases:["signature-dishes"] },
+      { name:"Wok", id:"wok", aliases:["wok"] },
+      { name:"Spicy Korean", id:"spicy-korean", aliases:["spicy-korean","korean"] },
+      { name:"Thai Rotcurry/Thai Redcurry", id:"thai-rotcurry", aliases:["thai-rotcurry-thai-redcurry","thai-rotcurry","thai-redcurry","thai-red-curry"] },
+      { name:"Ramen/Udon", id:"ramen-udon", aliases:["ramen-udon","ramen","udon","ramen_udon"] },
+      { name:"Fried Rice/Noodles", id:"fried-rice-noodles", aliases:["fried-rice-noodles","fried-rice","fried-noodles","friedrice-noodles"] },
+      { name:"Beilagen & Saucen/Side Dishes & Sauces", id:"beilagen-saucen-side-dishes-sauces", aliases:["beilagen-saucen-side-dishes-sauces"] },
+      { name:"Dessert", id:"dessert", aliases:["dessert"] }
     ];
 
-    // Detect base folder: prefer /images/ then /image/
+    // Detect base folder: /images/ or /image/
     async function detectBase() {
       const candidates = ["images/", "image/"];
       for (const base of candidates) {
-        try {
-          const res = await fetch(base + "nigiri-sushi/1.jpg", { method:"HEAD" });
-          if (res.ok) return base;
-        } catch(e) {}
+        try { const res = await fetch(base, { method:"HEAD" }); if (res.ok) return base; } catch(e) {}
       }
-      // If HEAD probe fails, default to images/
       return "images/";
     }
 
@@ -146,6 +143,25 @@
     async function headExists(url) {
       try { const res = await fetch(url, { method: "HEAD" }); return res.ok; }
       catch(e) { return false; }
+    }
+
+    async function resolveFolder(base, aliases) {
+      // Check which alias folder actually exists by probing 1.jpg.. with common extensions
+      const exts = ["jpg","jpeg","png","webp","gif","JPG","JPEG","PNG","WEBP","GIF"];
+      for (const slug of aliases) {
+        // quick probe: check the folder by trying 1.<ext>
+        for (const ext of exts) {
+          const test = base + slug + "/1." + ext;
+          // eslint-disable-next-line no-await-in-loop
+          if (await headExists(test)) return slug;
+        }
+        // or a manifest.json present
+        try {
+          const m = await fetch(base + slug + "/manifest.json", { method:"HEAD" });
+          if (m.ok) return slug;
+        } catch(e) {}
+      }
+      return null;
     }
 
     async function loadList(base, slug) {
@@ -169,7 +185,7 @@
           // eslint-disable-next-line no-await-in-loop
           if (await headExists(url)) { files.push(f); found = true; break; }
         }
-        if (!found) break; // stop after first missing number
+        if (!found) break;
       }
       return files;
     }
@@ -188,10 +204,12 @@
       const BASE = await detectBase();
 
       for (const c of CATEGORIES) {
-        const grid = document.querySelector(`.grid[data-category="${c.slug}"]`);
-        const list = await loadList(BASE, c.slug);
+        const grid = document.querySelector(`.grid[data-category="${c.id}"]`);
+        const folder = await resolveFolder(BASE, c.aliases);
+        if (!folder) { grid.innerHTML = '<div class="empty">Keine Bilder gefunden (Ordner nicht gefunden).</div>'; continue; }
+        const list = await loadList(BASE, folder);
         if (!list.length) { grid.innerHTML = '<div class="empty">Keine Bilder gefunden.</div>'; continue; }
-        for (const file of list) { addFigure(grid, BASE + c.slug + "/" + file, file, c.name); }
+        for (const file of list) addFigure(grid, BASE + folder + "/" + file, file, c.name);
       }
     }
 
