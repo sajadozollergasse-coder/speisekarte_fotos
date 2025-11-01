@@ -5,78 +5,43 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Speisekarte</title>
   <style>
-    :root {
-      --max-width: 1200px;
-      --gap: 16px;
-      --radius: 16px;
-      --shadow: 0 4px 18px rgba(0,0,0,0.08);
-    }
+    :root { --max-width: 1200px; --gap: 16px; --radius: 16px; --shadow: 0 4px 18px rgba(0,0,0,0.08); }
     * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: ui-sans-serif, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-      background: #fff;
-      color: #111;
-      line-height: 1.5;
-    }
-    header {
-      position: sticky; top: 0; z-index: 20;
-      background: #fff; border-bottom: 1px solid #eee;
-    }
+    body { margin: 0; font-family: ui-sans-serif, -apple-system, Segoe UI, Roboto, Helvetica, Arial; background:#fff; color:#111; line-height:1.5; }
+    header { position: sticky; top: 0; z-index: 20; background:#fff; border-bottom:1px solid #eee; }
     .container { max-width: var(--max-width); margin: 0 auto; padding: 10px 16px; display:flex; align-items:center; gap:12px; }
-    .hamburger {
-      width: 36px; height: 28px; display:flex; flex-direction:column; justify-content:space-between; cursor:pointer;
-    }
-    .bar { height: 3px; background:#111; border-radius: 2px; }
+    .hamburger { width:36px; height:28px; display:flex; flex-direction:column; justify-content:space-between; cursor:pointer; }
+    .bar { height:3px; background:#111; border-radius:2px; }
     .logo { display:flex; align-items:center; gap:10px; }
-    .logo img { height: 36px; width:auto; }
-    .logo h1 { font-size: 18px; margin:0; font-weight:600; }
+    .logo img { height:36px; width:auto; }
+    .logo h1 { font-size:18px; margin:0; font-weight:600; }
     main { max-width: var(--max-width); margin: 0 auto; padding: 16px; }
     section { padding: 24px 0; }
-    h2 { margin: 0 0 12px; font-size: 24px; }
-    .grid {
-      display: grid; gap: var(--gap);
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      align-items: start;
-    }
-    figure {
-      margin: 0; border: 1px solid #eee; border-radius: var(--radius); overflow: hidden; background: #fff; box-shadow: var(--shadow);
-    }
-    figure img { width: 100%; height: 240px; object-fit: cover; display: block; }
-    figcaption { padding: 10px 12px; font-size: 14px; color: #333; }
-    .footer { border-top: 1px solid #eee; padding: 24px 20px; text-align:center; color:#777; }
+    h2 { margin:0 0 12px; font-size:24px; }
+    .grid { display:grid; gap:var(--gap); grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); align-items:start; }
+    figure { margin:0; border:1px solid #eee; border-radius:var(--radius); overflow:hidden; background:#fff; box-shadow: var(--shadow); }
+    figure img { width:100%; height:240px; object-fit:cover; display:block; }
+    figcaption { padding:10px 12px; font-size:14px; color:#333; }
+    .footer { border-top:1px solid #eee; padding:24px 20px; text-align:center; color:#777; }
 
     /* Sidebar */
-    .sidebar-backdrop {
-      position: fixed; inset: 0; background: rgba(0,0,0,.35); display:none; z-index: 30;
-    }
-    .sidebar {
-      position: fixed; inset: 0 auto 0 0; width: 320px; max-width: 86vw; background:#fff; border-right:1px solid #eee;
-      transform: translateX(-100%); transition: transform .2s ease; z-index: 40; display:flex; flex-direction:column;
-    }
-    .sidebar.open { transform: translateX(0); }
-    .sidebar-header { padding: 16px; border-bottom:1px solid #eee; display:flex; align-items:center; gap:10px; }
-    .sidebar-header img { height: 36px; }
+    .sidebar-backdrop { position:fixed; inset:0; background:rgba(0,0,0,.35); display:none; z-index:30; }
+    .sidebar { position:fixed; inset:0 auto 0 0; width:320px; max-width:86vw; background:#fff; border-right:1px solid #eee;
+               transform:translateX(-100%); transition:transform .2s ease; z-index:40; display:flex; flex-direction:column; }
+    .sidebar.open { transform:translateX(0); }
+    .sidebar-header { padding:16px; border-bottom:1px solid #eee; display:flex; align-items:center; gap:10px; }
+    .sidebar-header img { height:36px; }
     .sidebar-header strong { font-size:16px; }
-    .cat-list { padding: 8px; overflow:auto; }
-    .cat-list a {
-      display:block; padding: 10px 12px; margin: 6px 0; text-decoration:none; color:#111; background:#fafafa;
-      border:1px solid #eee; border-radius:10px;
-    }
+    .cat-list { padding:8px; overflow:auto; }
+    .cat-list a { display:block; padding:10px 12px; margin:6px 0; text-decoration:none; color:#111; background:#fafafa; border:1px solid #eee; border-radius:10px; }
     .cat-list a:hover { background:#f4f4f4; }
     .open-backdrop { display:block; }
 
     /* Lightbox */
-    .lightbox {
-      position: fixed; inset: 0; background: rgba(0,0,0,.85);
-      display: none; align-items: center; justify-content: center; padding: 20px; z-index: 50;
-    }
-    .lightbox.open { display: flex; }
-    .lightbox img { max-width: 96vw; max-height: 92vh; border-radius: 12px; }
-    .close-btn {
-      position: fixed; top: 14px; right: 16px; font-size: 28px; color: #fff; cursor: pointer; user-select: none;
-      z-index: 60;
-    }
+    .lightbox { position:fixed; inset:0; background:rgba(0,0,0,.85); display:none; align-items:center; justify-content:center; padding:20px; z-index:50; }
+    .lightbox.open { display:flex; }
+    .lightbox img { max-width:96vw; max-height:92vh; border-radius:12px; }
+    .close-btn { position:fixed; top:14px; right:16px; font-size:28px; color:#fff; cursor:pointer; user-select:none; z-index:60; }
   </style>
 </head>
 <body>
@@ -87,7 +52,7 @@
       <strong>Kategorien</strong>
     </div>
     <nav class="cat-list" aria-label="Kategorien">
-      <a href="#vorspeisenappetizers" onclick="closeSidebar()">Vorspeisen/Appetizers</a>
+      <a href="#vorspeisen-appetizers" onclick="closeSidebar()">Vorspeisen/Appetizers</a>
       <a href="#nigiri-sushi" onclick="closeSidebar()">Nigiri-Sushi</a>
       <a href="#single-luxury-plates" onclick="closeSidebar()">Single & Luxury Plates</a>
       <a href="#signature-rolls" onclick="closeSidebar()">Signature Rolls</a>
@@ -97,10 +62,10 @@
       <a href="#signature-dishes" onclick="closeSidebar()">Signature Dishes</a>
       <a href="#wok" onclick="closeSidebar()">Wok</a>
       <a href="#spicy-korean" onclick="closeSidebar()">Spicy Korean</a>
-      <a href="#thai-rotcurrythai-redcurry" onclick="closeSidebar()">Thai Rotcurry/Thai Redcurry</a>
-      <a href="#ramenudon" onclick="closeSidebar()">Ramen/Udon</a>
-      <a href="#fried-ricenoodles" onclick="closeSidebar()">Fried Rice/Noodles</a>
-      <a href="#beilagen-saucenside-dishes-sauces" onclick="closeSidebar()">Beilagen & Saucen/Side Dishes & Sauces</a>
+      <a href="#thai-rotcurry-thai-redcurry" onclick="closeSidebar()">Thai Rotcurry/Thai Redcurry</a>
+      <a href="#ramen-udon" onclick="closeSidebar()">Ramen/Udon</a>
+      <a href="#fried-rice-noodles" onclick="closeSidebar()">Fried Rice/Noodles</a>
+      <a href="#beilagen-saucen-side-dishes-sauces" onclick="closeSidebar()">Beilagen & Saucen/Side Dishes & Sauces</a>
       <a href="#dessert" onclick="closeSidebar()">Dessert</a>
     </nav>
   </aside>
@@ -108,9 +73,7 @@
   <header>
     <div class="container">
       <div class="hamburger" id="hamburger" aria-label="Menü öffnen" aria-controls="sidebar" aria-expanded="false">
-        <div class="bar"></div>
-        <div class="bar"></div>
-        <div class="bar"></div>
+        <div class="bar"></div><div class="bar"></div><div class="bar"></div>
       </div>
       <div class="logo">
         <img src="assets/logo.png" alt="Logo" onerror="this.style.display='none'">
@@ -120,116 +83,24 @@
   </header>
 
   <main>
-
-    <section id="vorspeisenappetizers">
-      <h2>Vorspeisen/Appetizers</h2>
-      <div class="grid" data-category="vorspeisenappetizers">
-        <div class="empty">Keine Bilder gefunden.</div>
-      </div>
-    </section>
-
-    <section id="nigiri-sushi">
-      <h2>Nigiri-Sushi</h2>
-      <div class="grid" data-category="nigiri-sushi">
-        <div class="empty">Keine Bilder gefunden.</div>
-      </div>
-    </section>
-
-    <section id="single-luxury-plates">
-      <h2>Single & Luxury Plates</h2>
-      <div class="grid" data-category="single-luxury-plates">
-        <div class="empty">Keine Bilder gefunden.</div>
-      </div>
-    </section>
-
-    <section id="signature-rolls">
-      <h2>Signature Rolls</h2>
-      <div class="grid" data-category="signature-rolls">
-        <div class="empty">Keine Bilder gefunden.</div>
-      </div>
-    </section>
-
-    <section id="sashimi">
-      <h2>Sashimi</h2>
-      <div class="grid" data-category="sashimi">
-        <div class="empty">Keine Bilder gefunden.</div>
-      </div>
-    </section>
-
-    <section id="hot-rolls-sushi-burger">
-      <h2>Hot Rolls & Sushi Burger</h2>
-      <div class="grid" data-category="hot-rolls-sushi-burger">
-        <div class="empty">Keine Bilder gefunden.</div>
-      </div>
-    </section>
-
-    <section id="classic-rolls">
-      <h2>Classic Rolls</h2>
-      <div class="grid" data-category="classic-rolls">
-        <div class="empty">Keine Bilder gefunden.</div>
-      </div>
-    </section>
-
-    <section id="signature-dishes">
-      <h2>Signature Dishes</h2>
-      <div class="grid" data-category="signature-dishes">
-        <div class="empty">Keine Bilder gefunden.</div>
-      </div>
-    </section>
-
-    <section id="wok">
-      <h2>Wok</h2>
-      <div class="grid" data-category="wok">
-        <div class="empty">Keine Bilder gefunden.</div>
-      </div>
-    </section>
-
-    <section id="spicy-korean">
-      <h2>Spicy Korean</h2>
-      <div class="grid" data-category="spicy-korean">
-        <div class="empty">Keine Bilder gefunden.</div>
-      </div>
-    </section>
-
-    <section id="thai-rotcurrythai-redcurry">
-      <h2>Thai Rotcurry/Thai Redcurry</h2>
-      <div class="grid" data-category="thai-rotcurrythai-redcurry">
-        <div class="empty">Keine Bilder gefunden.</div>
-      </div>
-    </section>
-
-    <section id="ramenudon">
-      <h2>Ramen/Udon</h2>
-      <div class="grid" data-category="ramenudon">
-        <div class="empty">Keine Bilder gefunden.</div>
-      </div>
-    </section>
-
-    <section id="fried-ricenoodles">
-      <h2>Fried Rice/Noodles</h2>
-      <div class="grid" data-category="fried-ricenoodles">
-        <div class="empty">Keine Bilder gefunden.</div>
-      </div>
-    </section>
-
-    <section id="beilagen-saucenside-dishes-sauces">
-      <h2>Beilagen & Saucen/Side Dishes & Sauces</h2>
-      <div class="grid" data-category="beilagen-saucenside-dishes-sauces">
-        <div class="empty">Keine Bilder gefunden.</div>
-      </div>
-    </section>
-
-    <section id="dessert">
-      <h2>Dessert</h2>
-      <div class="grid" data-category="dessert">
-        <div class="empty">Keine Bilder gefunden.</div>
-      </div>
-    </section>
+    <section id="vorspeisen-appetizers"><h2>Vorspeisen/Appetizers</h2><div class="grid" data-category="vorspeisen-appetizers"></div></section>
+    <section id="nigiri-sushi"><h2>Nigiri-Sushi</h2><div class="grid" data-category="nigiri-sushi"></div></section>
+    <section id="single-luxury-plates"><h2>Single & Luxury Plates</h2><div class="grid" data-category="single-luxury-plates"></div></section>
+    <section id="signature-rolls"><h2>Signature Rolls</h2><div class="grid" data-category="signature-rolls"></div></section>
+    <section id="sashimi"><h2>Sashimi</h2><div class="grid" data-category="sashimi"></div></section>
+    <section id="hot-rolls-sushi-burger"><h2>Hot Rolls & Sushi Burger</h2><div class="grid" data-category="hot-rolls-sushi-burger"></div></section>
+    <section id="classic-rolls"><h2>Classic Rolls</h2><div class="grid" data-category="classic-rolls"></div></section>
+    <section id="signature-dishes"><h2>Signature Dishes</h2><div class="grid" data-category="signature-dishes"></div></section>
+    <section id="wok"><h2>Wok</h2><div class="grid" data-category="wok"></div></section>
+    <section id="spicy-korean"><h2>Spicy Korean</h2><div class="grid" data-category="spicy-korean"></div></section>
+    <section id="thai-rotcurry-thai-redcurry"><h2>Thai Rotcurry/Thai Redcurry</h2><div class="grid" data-category="thai-rotcurry-thai-redcurry"></div></section>
+    <section id="ramen-udon"><h2>Ramen/Udon</h2><div class="grid" data-category="ramen-udon"></div></section>
+    <section id="fried-rice-noodles"><h2>Fried Rice/Noodles</h2><div class="grid" data-category="fried-rice-noodles"></div></section>
+    <section id="beilagen-saucen-side-dishes-sauces"><h2>Beilagen & Saucen/Side Dishes & Sauces</h2><div class="grid" data-category="beilagen-saucen-side-dishes-sauces"></div></section>
+    <section id="dessert"><h2>Dessert</h2><div class="grid" data-category="dessert"></div></section>
   </main>
 
-  <div class="footer">
-    © <span id="year"></span> — Alle Rechte vorbehalten.
-  </div>
+  <div class="footer">© <span id="year"></span> — Alle Rechte vorbehalten.</div>
 
   <div class="lightbox" id="lightbox" aria-hidden="true">
     <div class="close-btn" id="closeBtn" aria-label="Schließen">×</div>
@@ -237,71 +108,111 @@
   </div>
 
   <script>
-    const CATEGORIES = [{"name": "Vorspeisen/Appetizers", "slug": "vorspeisenappetizers"}, {"name": "Nigiri-Sushi", "slug": "nigiri-sushi"}, {"name": "Single & Luxury Plates", "slug": "single-luxury-plates"}, {"name": "Signature Rolls", "slug": "signature-rolls"}, {"name": "Sashimi", "slug": "sashimi"}, {"name": "Hot Rolls & Sushi Burger", "slug": "hot-rolls-sushi-burger"}, {"name": "Classic Rolls", "slug": "classic-rolls"}, {"name": "Signature Dishes", "slug": "signature-dishes"}, {"name": "Wok", "slug": "wok"}, {"name": "Spicy Korean", "slug": "spicy-korean"}, {"name": "Thai Rotcurry/Thai Redcurry", "slug": "thai-rotcurrythai-redcurry"}, {"name": "Ramen/Udon", "slug": "ramenudon"}, {"name": "Fried Rice/Noodles", "slug": "fried-ricenoodles"}, {"name": "Beilagen & Saucen/Side Dishes & Sauces", "slug": "beilagen-saucenside-dishes-sauces"}, {"name": "Dessert", "slug": "dessert"}];
+    const CATEGORIES = [
+      { name:"Vorspeisen/Appetizers", slug:"vorspeisen-appetizers" },
+      { name:"Nigiri-Sushi", slug:"nigiri-sushi" },
+      { name:"Single & Luxury Plates", slug:"single-luxury-plates" },
+      { name:"Signature Rolls", slug:"signature-rolls" },
+      { name:"Sashimi", slug:"sashimi" },
+      { name:"Hot Rolls & Sushi Burger", slug:"hot-rolls-sushi-burger" },
+      { name:"Classic Rolls", slug:"classic-rolls" },
+      { name:"Signature Dishes", slug:"signature-dishes" },
+      { name:"Wok", slug:"wok" },
+      { name:"Spicy Korean", slug:"spicy-korean" },
+      { name:"Thai Rotcurry/Thai Redcurry", slug:"thai-rotcurry-thai-redcurry" },
+      { name:"Ramen/Udon", slug:"ramen-udon" },
+      { name:"Fried Rice/Noodles", slug:"fried-rice-noodles" },
+      { name:"Beilagen & Saucen/Side Dishes & Sauces", slug:"beilagen-saucen-side-dishes-sauces" },
+      { name:"Dessert", slug:"dessert" }
+    ];
+
+    // Detect base folder: prefer /images/ then /image/
+    async function detectBase() {
+      const candidates = ["images/", "image/"];
+      for (const base of candidates) {
+        try {
+          const res = await fetch(base + "nigiri-sushi/1.jpg", { method:"HEAD" });
+          if (res.ok) return base;
+        } catch(e) {}
+      }
+      // If HEAD probe fails, default to images/
+      return "images/";
+    }
 
     function titleFromFilename(name) {
       return name.replace(/[-_]/g, " ").replace(/\.[^/.]+$/, "").trim();
     }
 
-    async function loadManifest(slug) {
+    async function headExists(url) {
+      try { const res = await fetch(url, { method: "HEAD" }); return res.ok; }
+      catch(e) { return false; }
+    }
+
+    async function loadList(base, slug) {
+      // 1) Try manifest.json
       try {
-        const res = await fetch("images/" + slug + "/manifest.json");
-        if (!res.ok) return null;
-        return await res.json();
-      } catch (e) { return null; }
+        const res = await fetch(base + slug + "/manifest.json");
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data.images) && data.images.length) return data.images;
+        }
+      } catch (e) {}
+
+      // 2) Fallback: probe files 1..200 with common extensions
+      const exts = ["jpg","jpeg","png","webp","gif","JPG","JPEG","PNG","WEBP","GIF"];
+      const files = [];
+      for (let i=1;i<=200;i++) {
+        let found = false;
+        for (const ext of exts) {
+          const f = i + "." + ext;
+          const url = base + slug + "/" + f;
+          // eslint-disable-next-line no-await-in-loop
+          if (await headExists(url)) { files.push(f); found = true; break; }
+        }
+        if (!found) break; // stop after first missing number
+      }
+      return files;
+    }
+
+    function addFigure(grid, src, file, name) {
+      const fig = document.createElement("figure");
+      const img = document.createElement("img");
+      img.loading = "lazy"; img.decoding = "async"; img.src = src; img.alt = titleFromFilename(file)||name;
+      img.addEventListener("click", () => openLightbox(src));
+      const cap = document.createElement("figcaption"); cap.textContent = titleFromFilename(file);
+      fig.appendChild(img); fig.appendChild(cap); grid.appendChild(fig);
     }
 
     async function init() {
       document.getElementById("year").textContent = new Date().getFullYear();
+      const BASE = await detectBase();
 
       for (const c of CATEGORIES) {
         const grid = document.querySelector(`.grid[data-category="${c.slug}"]`);
-        const manifest = await loadManifest(c.slug);
-        if (!manifest || !Array.isArray(manifest.images)) continue;
-        for (const file of manifest.images) {
-          const src = "images/" + c.slug + "/" + file;
-          const fig = document.createElement("figure");
-          const img = document.createElement("img");
-          img.loading = "lazy"; img.decoding = "async";
-          img.src = src; img.alt = titleFromFilename(file) || c.name;
-          img.addEventListener("click", () => openLightbox(src));
-          const cap = document.createElement("figcaption");
-          cap.textContent = titleFromFilename(file);
-          fig.appendChild(img); fig.appendChild(cap);
-          grid.appendChild(fig);
-        }
+        const list = await loadList(BASE, c.slug);
+        if (!list.length) { grid.innerHTML = '<div class="empty">Keine Bilder gefunden.</div>'; continue; }
+        for (const file of list) { addFigure(grid, BASE + c.slug + "/" + file, file, c.name); }
       }
     }
 
     function openLightbox(src) {
       const lb = document.getElementById("lightbox");
       const im = document.getElementById("lightboxImg");
-      im.src = src;
-      lb.classList.add("open");
-      lb.setAttribute("aria-hidden", "false");
+      im.src = src; lb.classList.add("open"); lb.setAttribute("aria-hidden","false");
     }
     document.getElementById("closeBtn").addEventListener("click", () => {
       const lb = document.getElementById("lightbox");
-      lb.classList.remove("open");
-      lb.setAttribute("aria-hidden", "true");
+      lb.classList.remove("open"); lb.setAttribute("aria-hidden","true");
     });
     document.addEventListener("keydown", (e) => { if (e.key === "Escape") document.getElementById("closeBtn").click(); });
 
-    // Sidebar logic
+    // Sidebar
     const sidebar = document.getElementById('sidebar');
     const backdrop = document.getElementById('sidebarBackdrop');
     const burger = document.getElementById('hamburger');
-    function openSidebar() {
-      sidebar.classList.add('open'); backdrop.classList.add('open-backdrop');
-      burger.setAttribute('aria-expanded', 'true');
-    }
-    function closeSidebar() {
-      sidebar.classList.remove('open'); backdrop.classList.remove('open-backdrop');
-      burger.setAttribute('aria-expanded', 'false');
-    }
-    burger.addEventListener('click', () => {
-      if (sidebar.classList.contains('open')) closeSidebar(); else openSidebar();
-    });
+    function openSidebar() { sidebar.classList.add('open'); backdrop.classList.add('open-backdrop'); burger.setAttribute('aria-expanded','true'); }
+    function closeSidebar() { sidebar.classList.remove('open'); backdrop.classList.remove('open-backdrop'); burger.setAttribute('aria-expanded','false'); }
+    burger.addEventListener('click', () => { sidebar.classList.contains('open') ? closeSidebar() : openSidebar(); });
     backdrop.addEventListener('click', closeSidebar);
 
     init();
