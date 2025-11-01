@@ -3,10 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Speisekarte</title>
+  <title>Sajado – Speisekarte</title>
   <style>
-    :root { --max-width: 1200px; --gap: 16px; --radius: 16px; --shadow: 0 4px 18px rgba(0,0,0,0.08); }
+    :root { --max-width: 1200px; --gap: 16px; --radius: 16px; --shadow: 0 4px 18px rgba(0,0,0,0.08); --header-h: 60px; }
     * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body { margin: 0; font-family: ui-sans-serif, -apple-system, Segoe UI, Roboto, Helvetica, Arial; background:#fff; color:#111; line-height:1.5; }
     header { position: sticky; top: 0; z-index: 20; background:#fff; border-bottom:1px solid #eee; }
     .container { max-width: var(--max-width); margin: 0 auto; padding: 10px 16px; display:flex; align-items:center; gap:12px; }
@@ -14,12 +15,13 @@
     .bar { height:3px; background:#111; border-radius:2px; }
     .logo { display:flex; align-items:center; gap:10px; }
     .logo img { height:36px; width:auto; }
-    .logo h1 { font-size:18px; margin:0; font-weight:600; }
+    .logo h1 { font-size:18px; margin:0; font-weight:700; letter-spacing:.2px; }
     main { max-width: var(--max-width); margin: 0 auto; padding: 16px; }
-    section { padding: 24px 0; }
-    h2 { margin:0 0 12px; font-size:24px; }
+    section { padding: 32px 0; scroll-margin-top: calc(var(--header-h) + 14px); }
+    h2 { margin:0 0 12px; font-size:26px; }
     .grid { display:grid; gap:var(--gap); grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); align-items:start; }
-    figure { margin:0; border:1px solid #eee; border-radius:var(--radius); overflow:hidden; background:#fff; box-shadow: var(--shadow); }
+    figure { margin:0; border:1px solid #eee; border-radius:var(--radius); overflow:hidden; background:#fff; box-shadow: var(--shadow); transition: transform .08s ease; }
+    figure:hover { transform: translateY(-2px); }
     figure img { width:100%; height:240px; object-fit:cover; display:block; }
     figcaption { padding:10px 12px; font-size:14px; color:#333; }
     .footer { border-top:1px solid #eee; padding:24px 20px; text-align:center; color:#777; }
@@ -32,16 +34,32 @@
     .sidebar-header { padding:16px; border-bottom:1px solid #eee; display:flex; align-items:center; gap:10px; }
     .sidebar-header img { height:36px; }
     .sidebar-header strong { font-size:16px; }
-    .cat-list { padding:8px; overflow:auto; }
-    .cat-list a { display:block; padding:10px 12px; margin:6px 0; text-decoration:none; color:#111; background:#fafafa; border:1px solid #eee; border-radius:10px; }
+    .search-wrap { padding:10px 12px; border-bottom:1px solid #eee; }
+    .search { width:100%; padding:10px 12px; border:1px solid #e5e5e5; border-radius:10px; outline:none; }
+    .cat-list { padding: 8px; overflow:auto; }
+    .cat-list a { display:flex; justify-content:space-between; gap:10px; padding:10px 12px; margin:6px 0; text-decoration:none; color:#111; background:#fafafa; border:1px solid #eee; border-radius:10px; transition: background .08s ease; }
     .cat-list a:hover { background:#f4f4f4; }
+    .cat-list a.active { border-color:#111; outline:2px solid #111; }
+
     .open-backdrop { display:block; }
+
+    /* Back to top */
+    #toTop { position:fixed; right:16px; bottom:16px; padding:10px 12px; border-radius:999px; border:1px solid #eee; background:#fff; box-shadow: var(--shadow); cursor:pointer; display:none; z-index:45; }
+    #toTop.show { display:block; }
 
     /* Lightbox */
     .lightbox { position:fixed; inset:0; background:rgba(0,0,0,.85); display:none; align-items:center; justify-content:center; padding:20px; z-index:50; }
     .lightbox.open { display:flex; }
     .lightbox img { max-width:96vw; max-height:92vh; border-radius:12px; }
     .close-btn { position:fixed; top:14px; right:16px; font-size:28px; color:#fff; cursor:pointer; user-select:none; z-index:60; }
+
+    @media (min-width: 1100px) {
+      /* Keep sidebar open on large screens */
+      .sidebar { transform: none; }
+      .sidebar-backdrop { display:none !important; }
+      body { padding-left: 320px; }
+      header { left: 320px; width: calc(100% - 320px); }
+    }
   </style>
 </head>
 <body>
@@ -51,22 +69,25 @@
       <img src="assets/logo.png" alt="Logo" onerror="this.style.display='none'">
       <strong>Kategorien</strong>
     </div>
-    <nav class="cat-list" aria-label="Kategorien">
-      <a href="#vorspeisen-appetizers" onclick="closeSidebar()">Vorspeisen/Appetizers</a>
-      <a href="#nigiri-sushi" onclick="closeSidebar()">Nigiri-Sushi</a>
-      <a href="#single-luxury-plates" onclick="closeSidebar()">Single & Luxury Plates</a>
-      <a href="#signature-rolls" onclick="closeSidebar()">Signature Rolls</a>
-      <a href="#sashimi" onclick="closeSidebar()">Sashimi</a>
-      <a href="#hot-rolls-sushi-burger" onclick="closeSidebar()">Hot Rolls & Sushi Burger</a>
-      <a href="#classic-rolls" onclick="closeSidebar()">Classic Rolls</a>
-      <a href="#signature-dishes" onclick="closeSidebar()">Signature Dishes</a>
-      <a href="#wok" onclick="closeSidebar()">Wok</a>
-      <a href="#spicy-korean" onclick="closeSidebar()">Spicy Korean</a>
-      <a href="#thai-rotcurry-thai-redcurry" onclick="closeSidebar()">Thai Rotcurry/Thai Redcurry</a>
-      <a href="#ramen-udon" onclick="closeSidebar()">Ramen/Udon</a>
-      <a href="#fried-rice-noodles" onclick="closeSidebar()">Fried Rice/Noodles</a>
-      <a href="#beilagen-saucen-side-dishes-sauces" onclick="closeSidebar()">Beilagen & Saucen/Side Dishes & Sauces</a>
-      <a href="#dessert" onclick="closeSidebar()">Dessert</a>
+    <div class="search-wrap">
+      <input id="catSearch" class="search" type="search" placeholder="Kategorien filtern …" aria-label="Kategorien filtern" />
+    </div>
+    <nav class="cat-list" aria-label="Kategorien" id="catList">
+      <a href="#vorspeisen-appetizers" data-slug="vorspeisen-appetizers" onclick="closeSidebar()">Vorspeisen/Appetizers</a>
+      <a href="#nigiri-sushi" data-slug="nigiri-sushi" onclick="closeSidebar()">Nigiri-Sushi</a>
+      <a href="#single-luxury-plates" data-slug="single-luxury-plates" onclick="closeSidebar()">Single & Luxury Plates</a>
+      <a href="#signature-rolls" data-slug="signature-rolls" onclick="closeSidebar()">Signature Rolls</a>
+      <a href="#sashimi" data-slug="sashimi" onclick="closeSidebar()">Sashimi</a>
+      <a href="#hot-rolls-sushi-burger" data-slug="hot-rolls-sushi-burger" onclick="closeSidebar()">Hot Rolls & Sushi Burger</a>
+      <a href="#classic-rolls" data-slug="classic-rolls" onclick="closeSidebar()">Classic Rolls</a>
+      <a href="#signature-dishes" data-slug="signature-dishes" onclick="closeSidebar()">Signature Dishes</a>
+      <a href="#wok" data-slug="wok" onclick="closeSidebar()">Wok</a>
+      <a href="#spicy-korean" data-slug="spicy-korean" onclick="closeSidebar()">Spicy Korean</a>
+      <a href="#thai-rotcurry-thai-redcurry" data-slug="thai-rotcurry-thai-redcurry" onclick="closeSidebar()">Thai Rotcurry/Thai Redcurry</a>
+      <a href="#ramen-udon" data-slug="ramen-udon" onclick="closeSidebar()">Ramen/Udon</a>
+      <a href="#fried-rice-noodles" data-slug="fried-rice-noodles" onclick="closeSidebar()">Fried Rice/Noodles</a>
+      <a href="#beilagen-saucen-side-dishes-sauces" data-slug="beilagen-saucen-side-dishes-sauces" onclick="closeSidebar()">Beilagen & Saucen/Side Dishes & Sauces</a>
+      <a href="#dessert" data-slug="dessert" onclick="closeSidebar()">Dessert</a>
     </nav>
   </aside>
 
@@ -77,7 +98,7 @@
       </div>
       <div class="logo">
         <img src="assets/logo.png" alt="Logo" onerror="this.style.display='none'">
-        <h1>Speisekarte</h1>
+        <h1>Sajado – Speisekarte</h1>
       </div>
     </div>
   </header>
@@ -99,6 +120,8 @@
     <section id="beilagen-saucen-side-dishes-sauces"><h2>Beilagen & Saucen/Side Dishes & Sauces</h2><div class="grid" data-category="beilagen-saucen-side-dishes-sauces"></div></section>
     <section id="dessert"><h2>Dessert</h2><div class="grid" data-category="dessert"></div></section>
   </main>
+
+  <button id="toTop" aria-label="Nach oben">↑</button>
 
   <div class="footer">© <span id="year"></span> — Alle Rechte vorbehalten.</div>
 
@@ -135,7 +158,6 @@
           if (res.ok) return base;
         } catch(e) {}
       }
-      // If HEAD probe fails, default to images/
       return "images/";
     }
 
@@ -183,6 +205,71 @@
       fig.appendChild(img); fig.appendChild(cap); grid.appendChild(fig);
     }
 
+    // Lightbox + keyboard navigation
+    let currentList = [];
+    let currentIndex = -1;
+    function openLightbox(src) {
+      const lb = document.getElementById("lightbox");
+      const im = document.getElementById("lightboxImg");
+      im.src = src; lb.classList.add("open"); lb.setAttribute("aria-hidden","false");
+    }
+    function closeLightbox(){ const lb=document.getElementById("lightbox"); lb.classList.remove("open"); lb.setAttribute("aria-hidden","true"); }
+    function showAt(idx){
+      if (idx<0 || idx>=currentList.length) return;
+      currentIndex = idx;
+      openLightbox(currentList[currentIndex]);
+    }
+
+    document.getElementById("closeBtn").addEventListener("click", closeLightbox);
+    document.getElementById("lightbox").addEventListener("click", (e)=>{ if(e.target.id==="lightbox") closeLightbox(); });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeLightbox();
+      else if (e.key === "ArrowRight" && currentList.length) showAt(Math.min(currentIndex+1, currentList.length-1));
+      else if (e.key === "ArrowLeft" && currentList.length) showAt(Math.max(currentIndex-1, 0));
+    });
+
+    // Sidebar open/close + active link
+    const sidebar = document.getElementById('sidebar');
+    const backdrop = document.getElementById('sidebarBackdrop');
+    const burger = document.getElementById('hamburger');
+    function openSidebar() { sidebar.classList.add('open'); backdrop.classList.add('open-backdrop'); burger.setAttribute('aria-expanded','true'); }
+    function closeSidebar() { sidebar.classList.remove('open'); backdrop.classList.remove('open-backdrop'); burger.setAttribute('aria-expanded','false'); }
+    burger.addEventListener('click', () => { sidebar.classList.contains('open') ? closeSidebar() : openSidebar(); });
+    backdrop.addEventListener('click', closeSidebar);
+
+    // Category filter (sidebar search)
+    document.getElementById('catSearch').addEventListener('input', (e) => {
+      const q = e.target.value.trim().toLowerCase();
+      document.querySelectorAll('#catList a').forEach(a => {
+        const txt = a.textContent.toLowerCase();
+        a.style.display = txt.includes(q) ? '' : 'none';
+      });
+    });
+
+    // Active link highlight as you scroll
+    const links = Array.from(document.querySelectorAll('#catList a'));
+    const sections = CATEGORIES.map(c => ({ slug: c.slug, el: document.getElementById(c.slug) }));
+    const onScroll = () => {
+      const y = window.scrollY + 120;
+      let active = null;
+      for (const s of sections) {
+        if (!s.el) continue;
+        const top = s.el.offsetTop;
+        if (y >= top) active = s.slug;
+      }
+      links.forEach(a => a.classList.toggle('active', a.dataset.slug === active));
+    };
+    document.addEventListener('scroll', onScroll, { passive:true });
+
+    // Back to top button
+    const toTop = document.getElementById('toTop');
+    toTop.addEventListener('click', ()=> window.scrollTo({ top: 0, behavior: 'smooth' }));
+    document.addEventListener('scroll', () => {
+      if (window.scrollY > 400) toTop.classList.add('show');
+      else toTop.classList.remove('show');
+    }, { passive:true });
+
     async function init() {
       document.getElementById("year").textContent = new Date().getFullYear();
       const BASE = await detectBase();
@@ -191,29 +278,24 @@
         const grid = document.querySelector(`.grid[data-category="${c.slug}"]`);
         const list = await loadList(BASE, c.slug);
         if (!list.length) { grid.innerHTML = '<div class="empty">Keine Bilder gefunden.</div>'; continue; }
-        for (const file of list) { addFigure(grid, BASE + c.slug + "/" + file, file, c.name); }
+
+        const full = list.map(f => BASE + c.slug + "/" + f);
+        currentList = currentList.concat(full); // build a global flat list for keyboard nav
+
+        list.forEach((file, i) => {
+          const src = BASE + c.slug + "/" + file;
+          const idx = currentList.length - list.length + i; // index in global list
+          const fig = document.createElement("figure");
+          const img = document.createElement("img");
+          img.loading = "lazy"; img.decoding = "async"; img.src = src;
+          img.alt = titleFromFilename(file)||c.name;
+          img.addEventListener("click", () => { currentIndex = idx; openLightbox(src); });
+          const cap = document.createElement("figcaption"); cap.textContent = titleFromFilename(file);
+          fig.appendChild(img); fig.appendChild(cap); grid.appendChild(fig);
+        });
       }
+      onScroll();
     }
-
-    function openLightbox(src) {
-      const lb = document.getElementById("lightbox");
-      const im = document.getElementById("lightboxImg");
-      im.src = src; lb.classList.add("open"); lb.setAttribute("aria-hidden","false");
-    }
-    document.getElementById("closeBtn").addEventListener("click", () => {
-      const lb = document.getElementById("lightbox");
-      lb.classList.remove("open"); lb.setAttribute("aria-hidden","true");
-    });
-    document.addEventListener("keydown", (e) => { if (e.key === "Escape") document.getElementById("closeBtn").click(); });
-
-    // Sidebar
-    const sidebar = document.getElementById('sidebar');
-    const backdrop = document.getElementById('sidebarBackdrop');
-    const burger = document.getElementById('hamburger');
-    function openSidebar() { sidebar.classList.add('open'); backdrop.classList.add('open-backdrop'); burger.setAttribute('aria-expanded','true'); }
-    function closeSidebar() { sidebar.classList.remove('open'); backdrop.classList.remove('open-backdrop'); burger.setAttribute('aria-expanded','false'); }
-    burger.addEventListener('click', () => { sidebar.classList.contains('open') ? closeSidebar() : openSidebar(); });
-    backdrop.addEventListener('click', closeSidebar);
 
     init();
   </script>
