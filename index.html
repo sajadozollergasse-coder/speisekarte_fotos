@@ -10,6 +10,7 @@
       --card:#fff; --shadow:0 6px 22px rgba(0,0,0,.08);
       --radius:18px; --gap:16px; --container:1200px;
       --accent:#b3261e; --accent-weak:#fff1f0;
+      --sidebar-w:330px;
     }
     *{box-sizing:border-box}
     html{scroll-behavior:smooth}
@@ -17,7 +18,7 @@
       font-family:ui-sans-serif,-apple-system,Segoe UI,Roboto,Helvetica,Arial;line-height:1.5}
 
     /* Header */
-    header{position:sticky;top:0;z-index:40;background:var(--bg);border-bottom:1px solid var(--border)}
+    header{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--border)}
     .container{max-width:var(--container);margin:0 auto;padding:10px 14px;display:flex;align-items:center;gap:12px}
     .logo{display:flex;align-items:center;gap:12px}
     .logo img{height:56px;width:auto}
@@ -30,7 +31,7 @@
     section{padding:24px 0;scroll-margin-top:86px}
     h2{margin:0 0 12px;font-size:clamp(18px,2.2vw,24px);font-weight:800;letter-spacing:.2px}
 
-    /* Grid */
+    /* Grid mit Bildern */
     .grid{display:grid;gap:var(--gap);grid-template-columns:repeat(auto-fill,minmax(200px,1fr));align-items:start}
     @media (min-width:620px){ .grid{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))} }
     .card{
@@ -44,10 +45,10 @@
     @media (min-width:900px){ .card img{max-height:500px} }
     .empty{color:var(--muted); background:#fafafa; border:1px dashed var(--border); border-radius:12px; padding:14px; text-align:center; grid-column:1/-1}
 
-    /* Sidebar */
+    /* Sidebar – Mobile: Overlay */
     .sidebar-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;z-index:30}
-    .sidebar{position:fixed;inset:0 auto 0 0;width:330px;max-width:88vw;background:#fff;border-right:1px solid var(--border);
-      box-shadow:10px 0 28px rgba(0,0,0,.06);transform:translateX(-100%);transition:transform .22s ease;z-index:50;display:flex;flex-direction:column}
+    .sidebar{position:fixed;inset:0 auto 0 0;width:var(--sidebar-w);max-width:88vw;background:#fff;border-right:1px solid var(--border);
+      box-shadow:10px 0 28px rgba(0,0,0,.06);transform:translateX(-100%);transition:transform .22s ease;z-index:40;display:flex;flex-direction:column}
     .sidebar.open{transform:translateX(0)}
     .open-backdrop{display:block}
     .sidebar-header{padding:16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;
@@ -62,14 +63,28 @@
 
     .footer{border-top:1px solid var(--border);padding:22px 16px;text-align:center;color:var(--muted)}
 
-    /* Desktop-Layout: Sidebar sticky */
+    /* Desktop-Layout: echte 2-Spalten-Grid-Areas (keine Overlay-Sidebar) */
     @media (min-width:1100px){
-      .sidebar{transform:translateX(0);position:sticky;top:0;height:100vh}
-      .sidebar-backdrop{display:none!important}
-      body{display:grid;grid-template-columns:330px 1fr}
-      header{grid-column:1/-1}
-      main{padding-left:24px}
-      .hamburger{display:none}
+      body{
+        display:grid;
+        grid-template-columns: var(--sidebar-w) 1fr;
+        grid-template-rows: auto 1fr;
+        grid-template-areas:
+          "side header"
+          "side main";
+        align-items:start;
+      }
+      .sidebar{
+        grid-area: side;
+        position: sticky; top: 0; height: 100vh;
+        transform:none; /* ganz wichtig: keine Overlay-Transformation auf Desktop */
+        z-index: 10;    /* unter dem Header, über dem Hintergrund */
+        box-shadow:none; border-right:1px solid var(--border);
+      }
+      header{ grid-area: header; position:sticky; top:0; z-index: 15; }
+      main{ grid-area: main; max-width: unset; padding: 18px 24px; }
+      .sidebar-backdrop{ display:none !important; }
+      .hamburger{ display:none; }
     }
   </style>
 </head>
@@ -95,7 +110,7 @@
       <a href="#thai-rotcurrythai-redcurry">Thai Rotcurry/Thai Redcurry</a>
       <a href="#ramenudon">Ramen/Udon</a>
       <a href="#fried-ricenoodles">Fried Rice/Noodles</a>
-      <!-- "Beilagen & Saucen" versteckt -->
+      <!-- Beilagen & Saucen absichtlich ausgeblendet -->
       <a href="#dessert">Dessert</a>
     </nav>
   </aside>
@@ -173,7 +188,7 @@
               var y = target.getBoundingClientRect().top + window.pageYOffset - 80;
               window.scrollTo({ top: y, behavior: "smooth" });
             }
-            closeSidebar();
+            closeSidebar(); // auf Mobil schließen
             for (var j=0;j<links.length;j++) links[j].classList.remove("active");
             a.classList.add("active");
           });
@@ -182,7 +197,6 @@
     }
 
     function observeSections(){
-      // Feature detection für IntersectionObserver
       if (!("IntersectionObserver" in window)) return;
       var items = Array.prototype.slice.call(document.querySelectorAll(".cat-list a"));
       var map = {};
@@ -202,7 +216,6 @@
 
     function init(){
       document.getElementById("year").textContent = new Date().getFullYear();
-      // Inhalte füllen
       (function fillAll(idx){
         if (idx >= CATEGORIES.length) { setupSidebarLinks(); observeSections(); return; }
         var slug = CATEGORIES[idx];
@@ -220,7 +233,7 @@
       })(0);
     }
 
-    // Sidebar toggle (ohne optional chaining)
+    // Sidebar toggle
     var sidebar  = document.getElementById('sidebar');
     var backdrop = document.getElementById('sidebarBackdrop');
     var burger   = document.getElementById('hamburger');
