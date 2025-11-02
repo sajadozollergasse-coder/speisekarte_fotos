@@ -10,7 +10,7 @@
       --card:#fff; --shadow:0 6px 22px rgba(0,0,0,.08);
       --radius:18px; --gap:16px; --container:1200px;
       --accent:#b3261e; --accent-weak:#fff1f0;
-      --sidebar-w:330px; --hdr-h:64px;
+      --sidebar-w:330px; --hdr-h:64px; /* mobile header */
     }
     *{box-sizing:border-box}
     html{scroll-behavior:smooth}
@@ -26,19 +26,23 @@
       height: var(--hdr-h);
       display:flex; align-items:center;
     }
+    /* Mobile auto-hide state */
     header.is-hidden{ transform: translateY(calc(-1 * var(--hdr-h))); box-shadow:none; }
 
-    .container{max-width:var(--container);margin:0 auto;padding:8px 14px;display:flex;align-items:center;gap:12px;justify-content:center}
-    .logo{display:flex;align-items:center;gap:12px}
-    .logo img{height:64px;width:auto; transition: transform .2s ease}
-    .logo img:active{ transform: scale(.98) }
-    @media (min-width:1100px){ .logo img{height:52px} }
-    .logo h1{font-size:clamp(16px,2vw,20px);margin:0;font-weight:800;letter-spacing:.2px}
+    .container{
+      max-width:var(--container);
+      margin:0 auto;
+      padding:8px 14px;
+      display:flex; align-items:center; gap:12px;
+      justify-content:center;           /* Inhalt mittig */
+      position:relative;                /* für absoluten Hamburger */
+    }
 
-    /* Fancy hamburger */
+    /* Hamburger links im Header, beeinflusst nicht die Zentrierung */
     .hamburger{
       width:44px;height:44px;display:grid;place-items:center;cursor:pointer; border-radius:12px;
       transition: background .2s ease, transform .2s ease; user-select:none; -webkit-tap-highlight-color:transparent;
+      position:absolute; left:8px; top:50%; transform:translateY(-50%);
     }
     .hamburger:hover{ background:#f7f7f7 }
     .ham-lines{ width:26px; height:18px; position:relative; }
@@ -48,15 +52,22 @@
     .ham-lines span:nth-child(1){ top:0 }
     .ham-lines span:nth-child(2){ top:7.5px }
     .ham-lines span:nth-child(3){ top:15px }
-    .sidebar.open .ham-lines span:nth-child(1){ top:7.5px; transform: rotate(45deg) }
-    .sidebar.open .ham-lines span:nth-child(2){ opacity:0 }
-    .sidebar.open .ham-lines span:nth-child(3){ top:7.5px; transform: rotate(-45deg) }
+    /* Morph zu X wenn offen */
+    .hamburger.is-open .ham-lines span:nth-child(1){ top:7.5px; transform: rotate(45deg) }
+    .hamburger.is-open .ham-lines span:nth-child(2){ opacity:0 }
+    .hamburger.is-open .ham-lines span:nth-child(3){ top:7.5px; transform: rotate(-45deg) }
+
+    .logo{display:flex;align-items:center;gap:12px}
+    .logo img{height:64px;width:auto; transition: transform .2s ease}
+    .logo img:active{ transform: scale(.98) }
+    @media (min-width:1100px){ .logo img{height:52px} }
+    .logo h1{font-size:clamp(16px,2vw,20px);margin:0;font-weight:800;letter-spacing:.2px}
 
     main{max-width:var(--container);margin:0 auto;padding:16px}
     section{padding:24px 0;scroll-margin-top:86px}
     h2{margin:0 0 12px;font-size:clamp(18px,2.2vw,24px);font-weight:800;letter-spacing:.2px}
 
-    /* Grid + Bilder */
+    /* Grid + Bilder (vollständig anzeigen) */
     .grid{display:grid;gap:var(--gap);grid-template-columns:repeat(auto-fill,minmax(200px,1fr));align-items:start}
     @media (min-width:620px){ .grid{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))} }
     .card{
@@ -80,18 +91,10 @@
       z-index:40; display:flex; flex-direction:column; box-shadow:10px 0 28px rgba(0,0,0,.06);
     }
     .sidebar.open{ transform:translateX(0) }
-    .sidebar-header{
-      padding:16px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:12px;
-      background:linear-gradient(0deg,#fff 0%,#fff 45%,var(--accent-weak) 45%,var(--accent-weak) 100%);
-      justify-content:flex-start;
-    }
+    .sidebar-header{ padding:16px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:12px;
+      background:linear-gradient(0deg,#fff 0%,#fff 45%,var(--accent-weak) 45%,var(--accent-weak) 100%) }
     .sidebar-header img{ height:40px }
     .sidebar-header .brand{ font-weight:800; font-size:16px; letter-spacing:.3px }
-    .sidebar-header .hamburger{ display:flex; margin-right:6px; }
-
-    @media (min-width:1100px){
-      .sidebar-header .hamburger{ display:none }
-    }
 
     .cat-list{ padding:10px; overflow:auto }
     .cat-list a{
@@ -99,6 +102,7 @@
       border-radius:12px; background:#fff; font-weight:600;
       transform: translateX(-6px); opacity: 0; animation: itemIn .35s ease forwards;
     }
+    /* Stagger Effekt */
     .cat-list a:nth-child(1){ animation-delay:.02s } .cat-list a:nth-child(2){ animation-delay:.04s }
     .cat-list a:nth-child(3){ animation-delay:.06s } .cat-list a:nth-child(4){ animation-delay:.08s }
     .cat-list a:nth-child(5){ animation-delay:.10s } .cat-list a:nth-child(6){ animation-delay:.12s }
@@ -112,6 +116,7 @@
 
     .footer{ border-top:1px solid var(--border); padding:22px 16px; text-align:center; color:var(--muted) }
 
+    /* Desktop: echtes 2-Spalten Grid, keine Overlay-Sidebar */
     @media (min-width:1100px){
       body{
         display:grid;
@@ -126,8 +131,11 @@
       header{ grid-area: header; position:sticky; top:0 }
       main{ grid-area: main; max-width: unset; padding: 18px 24px }
       .sidebar-backdrop{ display:none !important }
+      /* Desktop: Hamburger ausblenden */
+      .hamburger{ display:none }
     }
 
+    /* Barrierefreiheit */
     @media (prefers-reduced-motion: reduce){
       *{ animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: 0ms !important; scroll-behavior: auto !important }
     }
@@ -138,9 +146,6 @@
   <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
-      <div class="hamburger" id="hamburger" aria-label="Menü schließen" aria-controls="sidebar" aria-expanded="true">
-        <div class="ham-lines"><span></span><span></span><span></span></div>
-      </div>
       <img src="assets/logo.png" alt="Logo" onerror="this.style.display='none'">
       <div class="brand">Kategorien / Categories</div>
     </div>
@@ -165,6 +170,11 @@
   <!-- Header -->
   <header id="siteHeader">
     <div class="container">
+      <!-- Hamburger links (öffnet Sidebar) -->
+      <div class="hamburger" id="hamburger" aria-label="Menü öffnen" aria-controls="sidebar" aria-expanded="false">
+        <div class="ham-lines"><span></span><span></span><span></span></div>
+      </div>
+
       <div class="logo">
         <img src="assets/logo.png" alt="Logo">
         <h1>Sajado 1030 &amp; 1070</h1>
@@ -193,6 +203,7 @@
   <div class="footer">© <span id="year"></span> — Alle Rechte vorbehalten.</div>
 
   <script>
+    // Kategorien (ohne Beilagen & Saucen)
     var CATEGORIES = [
       "vorspeisenappetizers","nigiri-sushi","single-luxury-plates","signature-rolls","sashimi",
       "hot-rolls-sushi-burger","classic-rolls","signature-dishes","wok","spicy-korean",
@@ -202,9 +213,9 @@
     function loadManifest(slug){
       var url = "image/" + slug + "/manifest.json";
       return fetch(url, { cache: "no-store" })
-        .then(res => res.ok ? res.json() : null)
-        .then(data => data && Array.isArray(data.images) ? data.images : null)
-        .catch(() => null);
+        .then(function(res){ if(!res.ok) return null; return res.json(); })
+        .then(function(data){ return data && Array.isArray(data.images) ? data.images : null; })
+        .catch(function(){ return null; });
     }
 
     function addCard(grid, src){
@@ -219,53 +230,63 @@
       grid.appendChild(c);
     }
 
+    // Sidebar Links: smooth scroll + close on mobile + active state
     function setupSidebarLinks(){
       var links = document.querySelectorAll(".cat-list a");
-      for (let a of links){
-        a.addEventListener("click", e=>{
-          e.preventDefault();
-          var id = a.getAttribute("href").slice(1);
-          var target = document.getElementById(id);
-          if(target){
-            var y = target.getBoundingClientRect().top + window.pageYOffset - 80;
-            window.scrollTo({ top: y, behavior: "smooth" });
-          }
-          closeSidebar();
-          links.forEach(l=>l.classList.remove("active"));
-          a.classList.add("active");
-        });
+      for (var i=0;i<links.length;i++){
+        (function(a){
+          a.addEventListener("click", function(e){
+            e.preventDefault();
+            var id = a.getAttribute("href").slice(1);
+            var target = document.getElementById(id);
+            if(target){
+              var y = target.getBoundingClientRect().top + window.pageYOffset - 80;
+              window.scrollTo({ top: y, behavior: "smooth" });
+            }
+            closeSidebar();
+            for (var j=0;j<links.length;j++) links[j].classList.remove("active");
+            a.classList.add("active");
+          });
+        })(links[i]);
       }
     }
 
+    // Active-Link beim Scrollen
     function observeSections(){
       if (!("IntersectionObserver" in window)) return;
-      var items = Array.from(document.querySelectorAll(".cat-list a"));
-      var map = {}; items.forEach(a=>map[a.getAttribute("href").slice(1)] = a);
-      var io = new IntersectionObserver(entries=>{
-        entries.forEach(e=>{
+      var items = Array.prototype.slice.call(document.querySelectorAll(".cat-list a"));
+      var map = {};
+      items.forEach(function(a){ map[a.getAttribute("href").slice(1)] = a; });
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
           if(e.isIntersecting){
-            items.forEach(i=>i.classList.remove("active"));
+            items.forEach(function(i){ i.classList.remove("active"); });
             var link = map[e.target.id];
             if(link) link.classList.add("active");
           }
         });
       }, { rootMargin: "-40% 0px -55% 0px", threshold: 0 });
-      document.querySelectorAll("main > section").forEach(sec=>io.observe(sec));
+      var secs = document.querySelectorAll("main > section");
+      for (var k=0;k<secs.length;k++) io.observe(secs[k]);
     }
 
+    // Mobile header auto-hide (nur unter 1100px)
     function setupHeaderAutoHide(){
       var header = document.getElementById('siteHeader');
-      var lastY = window.pageYOffset;
+      var lastY = window.pageYOffset || document.documentElement.scrollTop;
       var ticking = false;
+
       function onScroll(){
-        var y = window.pageYOffset;
+        var y = window.pageYOffset || document.documentElement.scrollTop;
         if (ticking) return;
-        window.requestAnimationFrame(()=>{
+        window.requestAnimationFrame(function(){
           var isDesktop = window.matchMedia("(min-width:1100px)").matches;
           if (!isDesktop){
             if (y > lastY && y > 30){ header.classList.add("is-hidden"); }
             else { header.classList.remove("is-hidden"); }
-          } else header.classList.remove("is-hidden");
+          } else {
+            header.classList.remove("is-hidden");
+          }
           lastY = y;
           ticking = false;
         });
@@ -277,18 +298,52 @@
     function init(){
       document.getElementById("year").textContent = new Date().getFullYear();
       (function fillAll(idx){
-        if (idx >= CATEGORIES.length){ setupSidebarLinks(); observeSections(); setupHeaderAutoHide(); return; }
+        if (idx >= CATEGORIES.length) { setupSidebarLinks(); observeSections(); setupHeaderAutoHide(); return; }
         var slug = CATEGORIES[idx];
         var grid = document.querySelector('.grid[data-category="'+slug+'"]');
-        loadManifest(slug).then(files=>{
+        loadManifest(slug).then(function(files){
           if(!files || !files.length){
             grid.innerHTML = '<div class="empty">Keine Bilder gefunden oder manifest.json fehlt.</div>';
           }else{
-            files.forEach(f=>addCard(grid, "image/" + slug + "/" + f));
+            for (var i=0;i<files.length;i++){
+              addCard(grid, "image/" + slug + "/" + files[i]);
+            }
           }
           fillAll(idx+1);
         });
       })(0);
     }
 
-    var
+    // Sidebar toggle
+    var sidebar  = document.getElementById('sidebar');
+    var backdrop = document.getElementById('sidebarBackdrop');
+    var burger   = document.getElementById('hamburger');
+
+    function openSidebar(){
+      sidebar.classList.add('open');
+      backdrop.classList.add('open-backdrop');
+      if (burger){
+        burger.classList.add('is-open');
+        burger.setAttribute('aria-expanded','true');
+      }
+    }
+    function closeSidebar(){
+      sidebar.classList.remove('open');
+      backdrop.classList.remove('open-backdrop');
+      if (burger){
+        burger.classList.remove('is-open');
+        burger.setAttribute('aria-expanded','false');
+      }
+    }
+
+    if (burger){
+      burger.addEventListener('click', function(){
+        if (sidebar.classList.contains('open')) closeSidebar(); else openSidebar();
+      });
+    }
+    if (backdrop) backdrop.addEventListener('click', closeSidebar);
+
+    init();
+  </script>
+</body>
+</html>
